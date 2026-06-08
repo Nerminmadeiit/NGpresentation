@@ -1,0 +1,941 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nada Presentation</title>
+    <style>
+      :root {
+        --primary: #e6a4cb;
+        --accent: #c20024;
+        --secondary: #92001b;
+        --neutral-light: #fff2f8;
+        --neutral-dark: #1d1d1d;
+        --paper: #fffafc;
+        --shadow: 0 30px 90px rgba(29, 29, 29, 0.16);
+        --radius: 32px;
+        --gutter: clamp(1.25rem, 2vw, 2rem);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Avenir Next", "Segoe UI", sans-serif;
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(230, 164, 203, 0.25),
+            transparent 28%
+          ),
+          linear-gradient(180deg, #25181d 0%, #120f10 100%);
+        color: var(--neutral-dark);
+      }
+
+      img,
+      video {
+        display: block;
+        max-width: 100%;
+      }
+
+      .deck {
+        position: relative;
+      }
+
+      .slide {
+        position: sticky;
+        top: 0;
+        min-height: 100vh;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        background-image: url(assets/img/Leaves\ 2\ 1.png);
+      }
+
+      .panel {
+        width: 100%;
+        min-height: 100vh;
+        margin: 0;
+        border-radius: 0;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        position: relative;
+        isolation: isolate;
+        background-image: url(assets/img/Leaves\ 2\ 1.png);
+      }
+
+      .panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.08),
+          transparent 45%
+        );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .hero {
+        color: white;
+        background: #060506;
+      }
+
+      .hero-video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -2;
+      }
+
+      .video-audio-toggle {
+        position: absolute;
+        right: 1.5rem;
+        bottom: 1.5rem;
+        z-index: 2;
+        border: 0;
+        border-radius: 999px;
+        padding: 0.8rem 1.1rem;
+        background: rgba(20, 14, 17, 0.48);
+        color: #fff;
+        backdrop-filter: blur(12px);
+        font: inherit;
+        font-size: 0.95rem;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .video-audio-toggle:hover,
+      .video-audio-toggle:focus-visible {
+        background: rgba(20, 14, 17, 0.72);
+        transform: translateY(-1px);
+      }
+
+      .video-audio-toggle:focus-visible {
+        outline: 2px solid rgba(255, 242, 248, 0.9);
+        outline-offset: 3px;
+      }
+
+      h1,
+      h2 {
+        margin: 0;
+        font-family: "Baskerville", "Iowan Old Style", "Times New Roman", serif;
+        line-height: 0.95;
+        letter-spacing: -0.03em;
+      }
+
+      h1 {
+        font-size: clamp(3.8rem, 10vw, 7.6rem);
+      }
+
+      h2 {
+        font-size: clamp(2.2rem, 5vw, 4rem);
+      }
+
+      .title-black h2 {
+        color: #1d1d1d;
+      }
+
+      .title-red h2 {
+        color: #c20024;
+      }
+
+      .title-pink h2 {
+        color: #e6a4cb;
+      }
+
+      .content-panel {
+        padding: clamp(1.5rem, 3vw, 2rem);
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+        gap: clamp(1.5rem, 3vw, 2.5rem);
+        align-items: stretch;
+        z-index: 1;
+      }
+
+      .deck .content-panel {
+        background: linear-gradient(
+          160deg,
+          var(--neutral-light),
+          #ffe5ef
+        ) !important;
+      }
+
+      .title-only .content-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .title-only .media-column {
+        display: none;
+      }
+
+      .title-only .text-column {
+        min-height: calc(100vh - 3rem);
+        align-content: center;
+      }
+
+      .text-column {
+        display: grid;
+        align-content: center;
+        gap: 1.25rem;
+        padding: clamp(1rem, 2vw, 1.5rem);
+      }
+
+      .slide-number {
+        font-size: 0.92rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        opacity: 0.68;
+      }
+
+      .lead {
+        margin: 0;
+        font-size: clamp(1rem, 1.45vw, 1.15rem);
+        line-height: 1.75;
+        max-width: 58ch;
+      }
+
+      .bullet-list {
+        margin: 0;
+        padding-left: 1.2rem;
+        display: grid;
+        gap: 0.85rem;
+        font-size: clamp(1rem, 1.4vw, 1.12rem);
+        line-height: 1.65;
+      }
+
+      .media-column {
+        display: grid;
+        gap: 1rem;
+        align-content: center;
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .media-column > * {
+        grid-column: auto !important;
+      }
+
+      .image-slider {
+        position: relative;
+        min-height: clamp(260px, 50vh, 560px);
+        width: 100%;
+        border-radius: 26px;
+        overflow: hidden;
+        box-shadow: 0 22px 55px rgba(29, 29, 29, 0.14);
+      }
+
+      .slider-image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+      }
+
+      .slider-image.is-active {
+        opacity: 1;
+      }
+
+      .slide:nth-of-type(6) .image-slider {
+        min-height: clamp(320px, 62vh, 680px);
+      }
+
+      .slide:nth-of-type(6) .slider-image {
+        object-position: center center;
+        transform: scale(1.14);
+        transform-origin: center center;
+      }
+
+      .media-card,
+      .quote-card {
+        min-height: 240px;
+        border-radius: 26px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 22px 55px rgba(29, 29, 29, 0.14);
+      }
+
+      .media-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .quote-card {
+        padding: 1.5rem;
+        display: grid;
+        align-content: end;
+        gap: 0.85rem;
+      }
+
+      .quote-card strong {
+        font-size: 1.05rem;
+        line-height: 1.4;
+      }
+
+      .quote-card span {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        opacity: 0.78;
+      }
+
+      .single-image .media-column {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .accent-light {
+        background: linear-gradient(160deg, var(--neutral-light), #ffe5ef);
+      }
+
+      .accent-primary {
+        background: linear-gradient(160deg, #f5c2dd, var(--primary));
+      }
+
+      .accent-red {
+        background: linear-gradient(160deg, #d5163d, var(--accent));
+        color: white;
+      }
+
+      .accent-deep {
+        background: linear-gradient(160deg, #a80424, var(--secondary));
+        color: white;
+      }
+
+      .accent-dark {
+        background: linear-gradient(160deg, #2d2d2d, var(--neutral-dark));
+        color: white;
+      }
+
+      .accent-rose {
+        background: linear-gradient(160deg, #ffe7f3, #ffd0e3);
+      }
+
+      .accent-soft {
+        background: linear-gradient(160deg, #fff8fb, #f5dbe8);
+      }
+
+      .text-white .lead,
+      .text-white .slide-number,
+      .text-white .bullet-list {
+        color: rgba(255, 255, 255, 0.92);
+      }
+
+      .text-white .slide-number {
+        opacity: 0.85;
+      }
+
+      .span-two {
+        grid-column: span 2;
+      }
+
+      @media (max-width: 960px) {
+        .content-panel {
+          grid-template-columns: 1fr;
+        }
+
+        .media-column,
+        .single-image .media-column {
+          grid-template-columns: 1fr;
+        }
+
+        .span-two {
+          grid-column: auto;
+        }
+
+        .panel {
+          min-height: auto;
+        }
+
+        .slide {
+          min-height: auto;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .slide {
+          padding: 0;
+        }
+
+        .video-audio-toggle {
+          right: 1rem;
+          bottom: 1rem;
+          padding: 0.72rem 0.95rem;
+          font-size: 0.9rem;
+        }
+
+        .content-panel {
+          padding: 1.25rem;
+        }
+
+        .media-card,
+        .quote-card {
+          min-height: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="deck">
+      <section class="slide" aria-label="Hero slide">
+        <div class="panel hero">
+          <video class="hero-video" autoplay loop playsinline preload="auto">
+            <source
+              src="assets/vid/finaleanimation_compressed copy.mp4"
+              type="video/mp4"
+            />
+          </video>
+          <button class="video-audio-toggle" type="button" aria-pressed="true">
+            Mute
+          </button>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="panel content-panel accent-light single-image title-black">
+          <div class="text-column">
+            <!-- <span class="slide-number">Slide 02</span> -->
+            <h2>Hvem er Nada Ghazal</h2>
+            <!-- <p class="lead">
+              The deck opens with a clear snapshot of what Nada represents and
+              how the visual language should feel.
+            </p> -->
+            <!-- <ul class="bullet-list">
+              <li>international smykkedesigner</li>
+              <li>Beirut, Libanon</li>
+              <li>Kombinere kunst & håndværk</li>
+              <li>storytelling</li>
+              <li>organiske former</li>
+              <li>stærk visuel identitet</li>
+              <li>kvinder med fokus på identitet og design</li>
+              <li>kampagneuniverser</li>
+              <li>inspiration til projektet</li>
+            </ul> -->
+          </div>
+          <div
+            class="media-column"
+            data-slider-images='["assets/img/ABOUT_NADA_f9d3b7de-d445-4b1f-82dc-f224cb1a282d_1000x copy.webp","assets/img/bracelet copy.webp","assets/img/earrings copy.webp","assets/img/necklace copy.webp","assets/img/ring copy.webp","assets/img/slide2.2.jpg","assets/img/slide2.jpg"]'
+          >
+            <figure class="media-card">
+              <img
+                src="assets/img/ABOUT_NADA_f9d3b7de-d445-4b1f-82dc-f224cb1a282d_1000x copy.webp"
+                alt="Brand overview image for Nada presentation"
+              />
+              <img src="assets/img/slide2.2.jpg" alt="" />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="panel content-panel accent-primary title-red">
+          <div class="text-column">
+            <!-- <span class="slide-number">Slide 03</span> -->
+            <h2>Mine indsigter</h2>
+            <!-- <p class="lead">
+              Nada’s identity is built around softness, confidence, and
+              emotional clarity.
+            </p> -->
+            <!-- <ul class="bullet-list">
+              <li>
+                The pink primary color creates warmth and approachability.
+              </li>
+              <li>
+                The red accent adds urgency for important calls to action.
+              </li>
+              <li>
+                The deep red secondary tone anchors the system with authority.
+              </li>
+            </ul> -->
+          </div>
+          <div
+            class="media-column"
+            data-slider-images='["assets/img/Brainstorm copy.png","assets/img/Primary data copy.png","assets/img/Homepage analysis copy.png","assets/img/design thinking copy.png"]'
+          >
+            <figure class="media-card span-two">
+              <img
+                src="assets/img/Primary data copy.png"
+                alt="Nada identity image treatment"
+              />
+            </figure>
+            <figure class="media-card">
+              <img
+                src="assets/img/Emotion UX design notes copy.png"
+                alt="Slide 3 supporting image one"
+              />
+            </figure>
+            <figure class="media-card">
+              <img
+                src="assets/img/UI breakdown copy.png"
+                alt="Slide 3 supporting image two"
+              />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="panel content-panel accent-soft title-black">
+          <div class="text-column">
+            <!-- <span class="slide-number">Slide 05</span> -->
+            <h2>Fra idé til kampagneunivers</h2>
+            <!-- <p class="lead">
+              The layout system uses space, scale, and color blocking to let
+              each idea land cleanly.
+            </p> -->
+            <!-- <ul class="bullet-list">
+              <li>Large serif titles create a fashion-editorial tone.</li>
+              <li>
+                Sans-serif body copy keeps the content readable and practical.
+              </li>
+              <li>
+                Rounded panels and shadow depth make the slides feel tactile.
+              </li>
+            </ul> -->
+          </div>
+          <div
+            class="media-column"
+            data-slider-images='["assets/img/c1.png","assets/img/c2.png","assets/img/c3.png","assets/img/c4.png","assets/img/c5.png","assets/img/c6.png","assets/img/c7.png","assets/img/c8.png"]'
+          >
+            <figure class="media-card span-two">
+              <img
+                src="assets/img/Brainstorm copy.png"
+                alt="Visual language supporting image"
+              />
+            </figure>
+            <figure class="media-card">
+              <img
+                src="assets/img/design thinking copy.png"
+                alt="Editorial structure image"
+              />
+            </figure>
+            <figure class="media-card">
+              <img
+                src="assets/img/Wireframe logic copy.png"
+                alt="Presentation rhythm image"
+              />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div
+          class="panel content-panel accent-deep text-white single-image title-red"
+        >
+          <div class="text-column">
+            <!-- <span class="slide-number">Slide 06</span> -->
+            <h2>Psykologi i design</h2>
+            <!-- <p class="lead">
+              The palette gives the presentation a controlled emotional arc from
+              soft introduction to dramatic emphasis.
+            </p> -->
+            <!-- <ul class="bullet-list">
+              <li>Light neutrals open space and improve readability.</li>
+              <li>Accent red provides focus during key story moments.</li>
+              <li>
+                Dark neutral backgrounds increase contrast and cinematic weight.
+              </li>
+            </ul> -->
+          </div>
+          <div
+            class="media-column"
+            data-slider-images='["assets/img/slide6.1.png","assets/img/slide6.2.png","assets/img/slide6.3.png"]'
+          >
+            <figure class="media-card">
+              <img src="assets/img/slide6.1.png" alt="Palette roles image" />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="panel content-panel accent-rose title-pink">
+          <div class="text-column">
+            <!-- <span class="slide-number">Slide 07</span> -->
+            <h2>Wireframe Logic</h2>
+            <!-- <p class="lead">
+              Every slide follows the same logic so the audience always knows
+              where to look first.
+            </p> -->
+            <!-- <ul class="bullet-list">
+              <li>
+                The left column holds the title, intro sentence, and bullet
+                points.
+              </li>
+              <li>
+                The right column reserves a visual area for one or two
+                supporting images.
+              </li>
+              <li>
+                The repeated format makes the deck feel cohesive and
+                presentation-ready.
+              </li>
+            </ul> -->
+          </div>
+          <div
+            class="media-column"
+            data-slider-images='["assets/img/slide7.1.png","assets/img/slide7.2.png","assets/img/slide7.3.png"]'
+          >
+            <figure class="media-card">
+              <img
+                src="assets/img/slide7.1.png"
+                alt="Structured presentation layout image"
+              />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="panel content-panel accent-dark text-white title-black">
+          <div class="text-column">
+            <!-- <span class="slide-number">Slide 08</span> -->
+            <h2>Visual Design</h2>
+            <!-- <p class="lead">
+              The scrolling interaction is part of the presentation language,
+              not just page behavior.
+            </p> -->
+            <!-- <ul class="bullet-list">
+              <li>
+                Each new slide sticks and layers over the previous one like a
+                card stack.
+              </li>
+              <li>
+                The effect makes the deck feel controlled, paced, and cinematic.
+              </li>
+              <li>
+                The opening video transitions naturally into the narrative flow
+                below.
+              </li>
+            </ul> -->
+          </div>
+          <div
+            class="media-column"
+            data-slider-images='["assets/img/slide8.1.png","assets/img/slide8.2.png","assets/img/slide8.3.png","assets/img/slide8.4.png","assets/img/slide8.5.png"]'
+          >
+            <figure class="media-card">
+              <img
+                src="assets/img/slide8.1.png"
+                alt="Motion and transition reference image"
+              />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="panel content-panel accent-light title-red">
+          <div class="text-column">
+            <!-- <span class="slide-number">Slide 09</span> -->
+            <h2>Development</h2>
+            <!-- <p class="lead">
+              Media areas are intentionally flexible so the deck can support
+              both single visuals and paired image compositions.
+            </p> -->
+            <!-- <ul class="bullet-list">
+              <li>One-image slides create a clean, focused mood.</li>
+              <li>
+                Two-card slides allow a visual plus a supporting note or
+                secondary image.
+              </li>
+              <li>
+                The layout remains consistent even when the asset set is small.
+              </li>
+            </ul> -->
+          </div>
+          <div
+            class="media-column"
+            data-slider-images='["assets/img/slide9.1.png","assets/img/slide9.2.png","assets/img/slide9.3.png","assets/img/slide9.4.png","assets/img/slide9.5.png"]'
+          >
+            <figure class="media-card">
+              <img
+                src="assets/img/slide9.1.png"
+                alt="Image placement example for slide layout"
+              />
+            </figure>
+            <figure class="media-card">
+              <img
+                src="assets/img/slide9.2.png"
+                alt="Secondary image placement example for slide layout"
+              />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="panel content-panel accent-primary title-pink">
+          <div class="text-column">
+            <!-- <span class="slide-number">Slide 10</span> -->
+            <h2>Brugertest og iteration</h2>
+            <!-- <p class="lead">
+              Typography sets the tone quickly, so the deck uses contrast
+              between expressive headlines and calm body text.
+            </p> -->
+            <!-- <ul class="bullet-list">
+              <li>
+                Titles are large, elegant, and designed to read from a distance.
+              </li>
+              <li>
+                Bullet points keep the story concise and presentation-friendly.
+              </li>
+              <li>
+                Spacing around the text prevents visual overload on each slide.
+              </li>
+            </ul> -->
+          </div>
+          <div
+            class="media-column"
+            data-slider-images='["assets/img/slide10.1.png","assets/img/slide10.2.png"]'
+          >
+            <figure class="media-card">
+              <img
+                src="assets/img/slide10.1.png"
+                alt="Typography direction image example"
+              />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide title-only">
+        <div
+          class="panel content-panel accent-red text-white single-image title-black"
+        >
+          <div class="text-column">
+            <!-- <span class="slide-number">Slide 11</span> -->
+            <h2>Videreudvikling af konceptet</h2>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="panel content-panel accent-soft title-red">
+          <div class="text-column">
+            <!-- <span class="slide-number">Slide 12</span> -->
+            <h2>AI & Emotional Design</h2>
+            <!-- <p class="lead">
+              The presentation can also speak about how the brand shows up
+              across digital and physical moments.
+            </p> -->
+            <!-- <ul class="bullet-list">
+              <li>
+                Social, web, packaging, and motion can all use the same visual
+                foundation.
+              </li>
+              <li>Color roles stay consistent across every touchpoint.</li>
+              <li>
+                The layout adapts without losing the brand's overall tone.
+              </li>
+            </ul> -->
+          </div>
+          <div
+            class="media-column"
+            data-slider-images='["assets/img/slide11.1.png","assets/img/slide11.2.png","assets/img/slide11.3.png"]'
+          >
+            <figure class="media-card">
+              <img
+                src="assets/img/slide11.1.png"
+                alt="Touchpoints image example"
+              />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div
+          class="panel content-panel accent-soft"
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            grid-template-columns: 1fr;
+          "
+        >
+          <video
+            autoplay
+            loop
+            playsinline
+            muted
+            preload="auto"
+            style="
+              max-height: 80vh;
+              width: auto;
+              object-fit: cover;
+              display: block;
+              border-radius: 32px;
+            "
+          >
+            <source src="assets/vid/AI vid.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </section>
+
+      <section class="slide title-only">
+        <div class="panel content-panel accent-deep text-white title-pink">
+          <div class="text-column">
+            <!-- <span class="slide-number">Slide 13</span> -->
+            <h2>Hvad lærte jeg?</h2>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide title-only">
+        <div class="panel content-panel accent-light title-black">
+          <div class="text-column">
+            <!-- <span class="slide-number">Slide 14</span> -->
+            <h2>Konklusion</h2>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const heroVideo = document.querySelector(".hero-video");
+      const audioToggle = document.querySelector(".video-audio-toggle");
+
+      if (heroVideo) {
+        const syncAudioButton = () => {
+          if (!audioToggle) {
+            return;
+          }
+
+          const isMuted = heroVideo.muted || heroVideo.volume === 0;
+          audioToggle.textContent = isMuted ? "Unmute" : "Mute";
+          audioToggle.setAttribute("aria-pressed", String(!isMuted));
+          audioToggle.setAttribute(
+            "aria-label",
+            isMuted ? "Unmute video audio" : "Mute video audio",
+          );
+        };
+
+        const tryPlayWithAudio = async () => {
+          heroVideo.muted = false;
+          heroVideo.volume = 1;
+          syncAudioButton();
+
+          try {
+            await heroVideo.play();
+          } catch (error) {
+            heroVideo.muted = true;
+            syncAudioButton();
+            console.warn(
+              "Autoplay with audio was blocked by the browser.",
+              error,
+            );
+          }
+        };
+
+        if (audioToggle) {
+          audioToggle.addEventListener("click", async () => {
+            const shouldUnmute = heroVideo.muted || heroVideo.volume === 0;
+
+            heroVideo.muted = !shouldUnmute;
+            heroVideo.volume = shouldUnmute ? 1 : 0;
+            syncAudioButton();
+
+            if (shouldUnmute) {
+              try {
+                await heroVideo.play();
+              } catch (error) {
+                console.warn("Unable to resume video with audio.", error);
+              }
+            }
+          });
+        }
+
+        if (heroVideo.readyState >= 2) {
+          tryPlayWithAudio();
+        } else {
+          heroVideo.addEventListener("canplay", tryPlayWithAudio, {
+            once: true,
+          });
+        }
+
+        syncAudioButton();
+      }
+
+      const contentSlides = document.querySelectorAll(
+        ".deck .slide:not([aria-label='Hero slide']) .content-panel",
+      );
+
+      contentSlides.forEach((panel) => {
+        const mediaColumn = panel.querySelector(".media-column");
+        if (!mediaColumn) {
+          return;
+        }
+
+        const configuredSources =
+          mediaColumn.getAttribute("data-slider-images");
+        const foundImages = Array.from(mediaColumn.querySelectorAll("img"))
+          .map((img) => img.getAttribute("src"))
+          .filter(Boolean);
+
+        let imageSources = [];
+
+        if (configuredSources) {
+          try {
+            imageSources = JSON.parse(configuredSources);
+          } catch (error) {
+            imageSources = [];
+          }
+        }
+
+        if (imageSources.length === 0) {
+          imageSources = [...new Set(foundImages)];
+        }
+
+        mediaColumn.innerHTML = "";
+
+        const slider = document.createElement("div");
+        slider.className = "image-slider";
+
+        imageSources.forEach((src, index) => {
+          const image = document.createElement("img");
+          image.className = "slider-image";
+          if (index === 0) {
+            image.classList.add("is-active");
+          }
+          image.src = src;
+          image.alt = `Slide image ${index + 1}`;
+          slider.appendChild(image);
+        });
+
+        mediaColumn.appendChild(slider);
+      });
+
+      document.querySelectorAll(".image-slider").forEach((slider) => {
+        const images = slider.querySelectorAll(".slider-image");
+        if (images.length < 2) {
+          return;
+        }
+
+        let activeIndex = 0;
+
+        setInterval(() => {
+          images[activeIndex].classList.remove("is-active");
+          activeIndex = (activeIndex + 1) % images.length;
+          images[activeIndex].classList.add("is-active");
+        }, 2000);
+      });
+    </script>
+  </body>
+</html>
